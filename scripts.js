@@ -1,4 +1,4 @@
-const cardList = [{
+/*const cardList = [{
     title: 'Lake Tyrell',
     path: 'Images/laketyrell.jpeg',
     subTitle: 'About Lake Tyrell',
@@ -16,6 +16,7 @@ const cardList = [{
     subTitle: 'About Artcenter',
     description: 'Arts Centre Melbourne, originally known as the Victorian Arts Centre and briefly called the Arts Centre, is a performing arts centre consisting of a complex of theatres and concert halls in the Melbourne Arts Precinct, located in the central Melbourne suburb of Southbank in Victoria, Australia.'
 }];
+*/
 
 const addCards = (items) => {
     items.forEach(item => {
@@ -33,12 +34,34 @@ const addCards = (items) => {
 
 const formSumitted = () => {
     let formData = {};
-    formData.firstName = $('#first_name').val();
-    formData.lastName = $('#last_name').val();
-    formData.password = $('#password').val();
-    formData.email = $('#email').val();
+    formData.title = $('#title').val();
+    formData.subTitle = $('#subTitle').val();
+    formData.path = $('#path').val();
+    formData.description = $('#description').val();
 
     console.log(formData);
+    postCat(formData);
+}
+
+function postCat(cat){
+    $.ajax({
+        url:'/api/cat',
+        type:'POST',
+        data:cat,
+        success: (result)=>{
+            if (result.statusCode === 201) {
+                alert('cat added');
+            }
+        }
+    });
+}
+
+function getAllCats(){
+    $.get('/api/cats', (result) => {
+        if (result.statusCode === 200) {
+            addCards(result.data);
+        }
+    });
 }
 
 $(document).ready(function(){
@@ -46,6 +69,6 @@ $(document).ready(function(){
     $('#formSubmit').click(()=>{
         formSumitted();
     });
-    addCards(cardList);
     $('.modal').modal();
+    getAllCats();
 });
